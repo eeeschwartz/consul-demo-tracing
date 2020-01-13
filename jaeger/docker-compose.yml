@@ -13,7 +13,7 @@ services:
     - 8500:8500
     networks:
       vpcbr:
-        ipv4_address: 10.5.0.2
+        ipv4_address: 10.7.0.2
 
   ingress:
     image: nicholasjackson/fake-service:v0.7.1
@@ -27,17 +27,17 @@ services:
       TIMING_90_PERCENTILE: 60ms
       TIMING_99_PERCENTILE: 90ms
       TIMING_VARIANCE: 10
-      TRACING_ZIPKIN: "http://jaeger:9411"
+      TRACING_ZIPKIN: "http://aac8b0ad5363b11ea8a5402a4e25409d-1210352576.us-west-2.elb.amazonaws.com:9411"
     ports:
     - "9090:9090"
     networks:
       vpcbr:
-        ipv4_address: 10.5.0.3
+        ipv4_address: 10.7.0.3
   ingress_envoy:
     image: nicholasjackson/consul-envoy:v1.6.1-v0.10.0
     environment:
-      CONSUL_HTTP_ADDR: 10.5.0.2:8500
-      CONSUL_GRPC_ADDR: 10.5.0.2:8502
+      CONSUL_HTTP_ADDR: 10.7.0.2:8500
+      CONSUL_GRPC_ADDR: 10.7.0.2:8502
       SERVICE_CONFIG: /config/ingress_v1.hcl
       CENTRAL_CONFIG: "/central_config/ingress_defaults.hcl"
     volumes:
@@ -59,15 +59,15 @@ services:
       TIMING_90_PERCENTILE: 30ms
       TIMING_99_PERCENTILE: 40ms
       TIMING_VARIANCE: 10
-      TRACING_ZIPKIN: "http://jaeger:9411"
+      TRACING_ZIPKIN: "http://aac8b0ad5363b11ea8a5402a4e25409d-1210352576.us-west-2.elb.amazonaws.com:9411"
     networks:
       vpcbr:
-        ipv4_address: 10.5.0.4
+        ipv4_address: 10.7.0.4
   web_proxy:
     image: nicholasjackson/consul-envoy:v1.6.0-v0.10.0
     environment:
-      CONSUL_HTTP_ADDR: 10.5.0.2:8500
-      CONSUL_GRPC_ADDR: 10.5.0.2:8502
+      CONSUL_HTTP_ADDR: 10.7.0.2:8500
+      CONSUL_GRPC_ADDR: 10.7.0.2:8502
       SERVICE_CONFIG: /config/web_v1.hcl
       CENTRAL_CONFIG: "/central_config/web_defaults.hcl"
     volumes:
@@ -87,18 +87,18 @@ services:
       TIMING_90_PERCENTILE: 2ms
       TIMING_99_PERCENTILE: 3ms
       TIMING_VARIANCE: 10
-      TRACING_ZIPKIN: "http://jaeger:9411"
+      TRACING_ZIPKIN: "http://aac8b0ad5363b11ea8a5402a4e25409d-1210352576.us-west-2.elb.amazonaws.com:9411"
       ERROR_RATE: 0.2
       ERROR_CODE: 14
       ERROR_TYPE: "http_error"
     networks:
       vpcbr:
-        ipv4_address: 10.5.0.5
+        ipv4_address: 10.7.0.5
   api_proxy:
     image: nicholasjackson/consul-envoy:v1.6.0-v0.10.0
     environment:
-      CONSUL_HTTP_ADDR: 10.5.0.2:8500
-      CONSUL_GRPC_ADDR: 10.5.0.2:8502
+      CONSUL_HTTP_ADDR: 10.7.0.2:8500
+      CONSUL_GRPC_ADDR: 10.7.0.2:8502
       SERVICE_CONFIG: /config/api_v1.hcl
       CENTRAL_CONFIG: "/central_config/api_defaults.hcl"
     volumes:
@@ -107,25 +107,25 @@ services:
     command: ["consul", "connect", "envoy", "-sidecar-for", "api-v1"]
     network_mode: "service:api"
 
-  jaeger:
-    image: jaegertracing/all-in-one:1.13
-    environment:
-      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
-    ports:
-    - "5775:5775/udp"
-    - "6831:6831/udp"
-    - "6832:6832/udp"
-    - "5778:5778"
-    - "16686:16686"
-    - "14268:14268"
-    - "9411:9411"
-    networks:
-      vpcbr:
-        ipv4_address: 10.5.0.6
+  # jaeger:
+  #   image: jaegertracing/all-in-one:1.13
+  #   environment:
+  #     COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+  #   ports:
+  #   - "5775:5775/udp"
+  #   - "6831:6831/udp"
+  #   - "6832:6832/udp"
+  #   - "5778:5778"
+  #   - "16686:16686"
+  #   - "14268:14268"
+  #   - "9411:9411"
+  #   networks:
+  #     vpcbr:
+  #       ipv4_address: 10.7.0.6
 
 networks:
   vpcbr:
     driver: bridge
     ipam:
       config:
-      - subnet: 10.5.0.0/16
+      - subnet: 10.7.0.0/16

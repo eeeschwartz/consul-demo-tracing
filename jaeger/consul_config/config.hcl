@@ -19,7 +19,7 @@ connect {
   enabled = true
 }
 
-advertise_addr = "10.5.0.2"
+advertise_addr = "10.7.0.2"
 enable_central_service_config = true
 
 config_entries {
@@ -27,7 +27,7 @@ config_entries {
     {
       kind = "proxy-defaults"
       name = "global"
-      
+
       config {
         envoy_extra_static_clusters_json = <<EOL
           {
@@ -43,7 +43,7 @@ config_entries {
                                 "endpoint": {
                                     "address": {
                                         "socket_address": {
-                                            "address": "10.5.0.6",
+                                            "address": "aac8b0ad5363b11ea8a5402a4e25409d-1210352576.us-west-2.elb.amazonaws.com",
                                             "port_value": 9411,
                                             "protocol": "TCP"
                                         }

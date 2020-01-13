@@ -1,16 +1,16 @@
 service {
   name = "ingress"
   id = "ingress-v1"
-  address = "10.5.0.3"
+  address = "10.7.0.3"
   port = 9090
-  
-  connect { 
+
+  connect {
     sidecar_service {
       port = 20000
-      
+
       check {
         name = "Connect Envoy Sidecar"
-        tcp = "10.5.0.3:20000"
+        tcp = "10.7.0.3:20000"
         interval ="10s"
       }
 
@@ -21,6 +21,6 @@ service {
           local_bind_port = 9091
         }
       }
-    }  
+    }
   }
 }
